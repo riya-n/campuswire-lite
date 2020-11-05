@@ -30,15 +30,16 @@ app.get('/', (req, res) => res.send('in here'));
 app.use('/api', ApiRouter);
 app.use('/account', AccountRouter);
 app.use(isAuthenticated);
-// app.use((err, req, res, next) => {
-//   if (res.headersSent) {
-//     return next(err);
-//   }
-//   res.status(500);
-//   res.render('error', { error: err });
-//   return res;
-// });
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500);
+  res.render('error', { error: err });
+  return res;
+});
 
 app.listen(port, () => {
+  // eslint-disable-next-line no-console
   console.log(`listening on ${port}`);
 });

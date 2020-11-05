@@ -5,21 +5,9 @@ const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const router = express.Router();
 
-// router.get('/', (err, req, res, next) => {
-//   if (err) {
-//     next(new Error('error on api endpoint'));
-//   }
-//   res.send('successfully reached api endpoint');
-// });
-
-router.get('/questions', (err, req, res, next) => {
-  if (err) {
-    next(new Error('error while getting questions'));
-  }
-
+router.get('/questions', (req, res, next) => {
   Question.find({}, (error, questions) => {
     if (error) {
-      // res.send(`error while getting questions with: ${error}`);
       next(error);
     } else if (questions) {
       res.send(questions);
@@ -27,11 +15,7 @@ router.get('/questions', (err, req, res, next) => {
   });
 });
 
-router.post('/questions/add', isAuthenticated, async (err, req, res, next) => {
-  if (err) {
-    next(new Error('error while adding question'));
-  }
-
+router.post('/questions/add', isAuthenticated, async (req, res, next) => {
   const { questionText } = req.body;
   const { username } = req.session;
 
@@ -40,15 +24,10 @@ router.post('/questions/add', isAuthenticated, async (err, req, res, next) => {
     res.send('question added successfully');
   } catch (error) {
     next(error);
-    // res.send('failure occurs when adding the question');
   }
 });
 
-router.post('/questions/answer', isAuthenticated, async (err, req, res, next) => {
-  if (err) {
-    next(new Error('error while answering question'));
-  }
-
+router.post('/questions/answer', isAuthenticated, async (req, res) => {
   const { _id, answer } = req.body;
 
   try {

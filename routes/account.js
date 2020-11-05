@@ -5,21 +5,16 @@ const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const router = express.Router();
 
-router.post('/', (err, req, res, next) => {
-  if (err) {
-    next(new Error('error on account endpoint'));
-  }
-
+router.post('/', (req, res) => {
   const { username } = req.session;
-
-  res.send(`${username} is logged in`);
+  if (username && username !== '') {
+    res.send(`${username} is logged in`);
+  } else {
+    res.send('no user logged in');
+  }
 });
 
-router.post('/signup', async (err, req, res, next) => {
-  if (err) {
-    next(new Error('error while signing up'));
-  }
-
+router.post('/signup', async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
@@ -30,33 +25,23 @@ router.post('/signup', async (err, req, res, next) => {
   }
 });
 
-router.post('/login', (err, req, res, next) => {
-  if (err) {
-    next(new Error('error while logging in'));
-  }
-
+router.post('/login', (req, res, next) => {
   const { username, password } = req.body;
 
   User.findOne({ username, password }, (error, user) => {
     if (user) {
       req.session.username = username;
       req.session.password = password;
-      console.log(req.session);
       res.send('logged in');
-    } else if (err) {
-      // res.send(`failed to log in with error: ${error}`);
-      next(err);
+    } else if (error) {
+      next(error);
     } else {
       res.send('failed to log in');
     }
   });
 });
 
-router.post('/logout', isAuthenticated, (err, req, res, next) => {
-  if (err) {
-    next(new Error('error while logging out'));
-  }
-
+router.post('/logout', isAuthenticated, (req, res) => {
   req.session.username = '';
   res.send('user logged out');
 });
