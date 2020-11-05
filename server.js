@@ -7,7 +7,7 @@ const AccountRouter = require('./routes/account');
 const isAuthenticated = require('./middlewares/isAuthenticated');
 
 const app = express();
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/test';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cw-lite';
 const port = process.env.PORT || 3000;
 
 mongoose.connect(MONGO_URI, {
@@ -25,17 +25,19 @@ app.use(
   }),
 );
 
+app.get('/', (req, res) => res.send('in here'));
+
 app.use('/api', ApiRouter);
 app.use('/account', AccountRouter);
 app.use(isAuthenticated);
-app.use((err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
-  res.status(500);
-  res.render('error', { error: err });
-  return res;
-});
+// app.use((err, req, res, next) => {
+//   if (res.headersSent) {
+//     return next(err);
+//   }
+//   res.status(500);
+//   res.render('error', { error: err });
+//   return res;
+// });
 
 app.listen(port, () => {
   console.log(`listening on ${port}`);

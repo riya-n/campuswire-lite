@@ -11,7 +11,6 @@ router.post('/', (err, req, res, next) => {
   }
 
   const { username } = req.session;
-  console.log(req.session);
 
   res.send(`${username} is logged in`);
 });
@@ -25,9 +24,9 @@ router.post('/signup', async (err, req, res, next) => {
 
   try {
     await User.create({ username, password });
-    res.send('username created succesfully');
+    res.send('account created succesfully');
   } catch {
-    res.send('failure occurs when creating the user');
+    next('failure occurs when creating the user');
   }
 });
 
@@ -44,8 +43,11 @@ router.post('/login', (err, req, res, next) => {
       req.session.password = password;
       console.log(req.session);
       res.send('logged in');
+    } else if (err) {
+      // res.send(`failed to log in with error: ${error}`);
+      next(err);
     } else {
-      res.send(`failed to log in with error: ${error}`);
+      res.send('failed to log in');
     }
   });
 });

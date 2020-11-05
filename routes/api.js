@@ -5,12 +5,12 @@ const isAuthenticated = require('../middlewares/isAuthenticated');
 
 const router = express.Router();
 
-router.get('/', (err, req, res, next) => {
-  if (err) {
-    next(new Error('error on api endpoint'));
-  }
-  res.send('successfully reached api endpoint');
-});
+// router.get('/', (err, req, res, next) => {
+//   if (err) {
+//     next(new Error('error on api endpoint'));
+//   }
+//   res.send('successfully reached api endpoint');
+// });
 
 router.get('/questions', (err, req, res, next) => {
   if (err) {
@@ -18,10 +18,11 @@ router.get('/questions', (err, req, res, next) => {
   }
 
   Question.find({}, (error, questions) => {
-    if (questions) {
+    if (error) {
+      // res.send(`error while getting questions with: ${error}`);
+      next(error);
+    } else if (questions) {
       res.send(questions);
-    } else {
-      res.send(`error while getting questions with: ${error}`);
     }
   });
 });
@@ -37,8 +38,9 @@ router.post('/questions/add', isAuthenticated, async (err, req, res, next) => {
   try {
     await Question.create({ questionText, author: username });
     res.send('question added successfully');
-  } catch {
-    res.send('failure occurs when adding the question');
+  } catch (error) {
+    next(error);
+    // res.send('failure occurs when adding the question');
   }
 });
 
