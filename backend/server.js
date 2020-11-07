@@ -2,12 +2,16 @@ const mongoose = require('mongoose');
 const express = require('express');
 const cookieSession = require('cookie-session');
 const path = require('path');
+const socketIO = require('socket.io');
+const http = require('http');
 
 const ApiRouter = require('./routes/api');
 const AccountRouter = require('./routes/account');
 const isAuthenticated = require('./middlewares/isAuthenticated');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cw-lite';
 const port = process.env.PORT || 3000;
 
@@ -46,7 +50,22 @@ app.get('*', (_, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`listening on ${port}`);
+// app.listen(port, () => {
+//   // eslint-disable-next-line no-console
+//   console.log(`listening on ${port}`);
+// });
+
+io.on('connection', (socket) => {
+  console.log('a user is connected');
+
+  socket.on('disconnect', () => {
+    console.log('user is disconnected');
+  });
+
+  socket.on('req', (data) => {
+    console.log(data);
+    socket.emit('res', 'hey back');
+  });
 });
+
+server.listen(port);

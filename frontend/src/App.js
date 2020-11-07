@@ -1,6 +1,9 @@
 /* eslint-disable react/jsx-filename-extension */
 import React, { useState } from 'react';
 import axios from 'axios';
+import socketIOClient from 'socket.io-client';
+
+const socket = socketIOClient.connect();
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -16,11 +19,16 @@ const App = () => {
     }
   };
 
+  socket.on('res', (data) => {
+    console.log(data);
+  });
+
   return (
     <>
       <input onChange={(e) => setUsername(e.target.value)} />
       <input onChange={(e) => setPassword(e.target.value)} />
       <button type="submit" onClick={() => signup()}>Sign Up</button>
+      <div onClick={() => socket.emit('req', 'hii')}>say hi</div>
       {msg}
     </>
   );
