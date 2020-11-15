@@ -18,6 +18,10 @@ export const InputBox = s.input`
 
 export const InputArea = s.textarea`
   margin-bottom: 1rem;
+  width: 100%;
+  height: 7rem;
+  border-color: rgb(40, 48, 51, 0.2);
+  border-radius: .25rem;
 `;
 
 export const ActionButton = s.button`
@@ -27,9 +31,9 @@ export const ActionButton = s.button`
   color: white;
   font-weight: 500;
   border: 1px solid transparent;
-  padding: .375rem .75rem;
+  padding: .5rem .75rem;
   border-radius: .25rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 export const CloseButton = s(ActionButton)`
@@ -56,6 +60,16 @@ export const BodyText = s.p`
 
 export const BodyTextBold = s(BodyText)`
   font-weight: 600;
+  margin-bottom: 0rem;
+`;
+
+export const BodyTextLarge = s(BodyText)`
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+`;
+
+export const BodyTextLink = s(BodyText)`
+  cursor: pointer;
 `;
 
 export const PopUp = s.div`
@@ -71,6 +85,7 @@ export const PopUp = s.div`
   margin: 40px auto;
   border-radius: .25rem;
   border: 1px solid rgba(0,0,0,.125);
+  padding: 1rem 1rem;
 `;
 
 export const ListElement = s.div`
@@ -78,6 +93,8 @@ export const ListElement = s.div`
   border: 1px solid rgb(40, 48, 51, 0.2);
   border-radius: .25rem;
   padding: 0.5rem 0.5rem;
+  margin: 0.5rem 0rem;
+  cursor: pointer;
 `;
 
 export const PageHeader = s.div`
@@ -111,4 +128,8 @@ export const QuestionContainer = s.div`
   padding: 1rem 1rem;
   width: -webkit-fill-available;
   height: 100%;
+`;
+
+export const AnswerContainer = s.div`
+  margin-top: 3rem;
 `;

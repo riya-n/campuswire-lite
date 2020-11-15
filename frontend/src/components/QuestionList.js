@@ -1,34 +1,36 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-filename-extension */
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionButton, BodyText, ListElement, QuestionListContainer } from '../styles';
-import AddQuestion from './AddQuestion';
+import {
+  ActionButton, ListElement, QuestionListContainer,
+} from '../styles';
 
-const QuestionList = (questions, setCurrQuestion, setPopUp) => {
-  const [loggedIn, setLoggedIn] = useState(false);
+const QuestionList = (props) => {
+  const {
+    questions, setCurrQuestion, setPopUp, isLoggedIn,
+  } = props;
   const history = useHistory();
-
-  const onClick = () => {
-    if (loggedIn) {
-      setPopUp(true);
-    } else {
-      history.push('/login');
-    }
-  };
 
   return (
     <QuestionListContainer>
-      <ActionButton onClick={() => onClick()}>
-        {loggedIn ? 'Add new Question +' : 'Log in to submit a question'}
-      </ActionButton>
-      <ul>
-        {
-          // questions.map(({ questionText, _id }) => (
-          //   <ListElement key={_id}>{questionText}</ListElement>
-          // ))
+      {
+        isLoggedIn()
+          ? (
+            <ActionButton onClick={() => setPopUp(true)}>Add new Question +</ActionButton>
+          ) : (
+            <ActionButton onClick={() => history.push('/login')}>Log in to submit a question</ActionButton>
+          )
+      }
+      {
+          questions.map((question) => (
+            // eslint-disable-next-line no-underscore-dangle
+            <ListElement key={question._id} onClick={() => setCurrQuestion(question)}>
+              {question.questionText}
+            </ListElement>
+          ))
         }
-      </ul>
     </QuestionListContainer>
   );
 };

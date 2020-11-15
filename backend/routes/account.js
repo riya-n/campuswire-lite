@@ -9,8 +9,6 @@ router.post('/', (req, res) => {
   const { username } = req.session;
   if (username && username !== '') {
     res.status(200).send(`${username}`);
-  } else {
-    res.status(401).send('');
   }
 });
 
@@ -19,6 +17,9 @@ router.post('/signup', async (req, res, next) => {
 
   try {
     await User.create({ username, password });
+    // also log in user
+    req.session.username = username;
+    req.session.password = password;
     res.send('account created succesfully');
   } catch {
     next('failure occurs when creating the user');
