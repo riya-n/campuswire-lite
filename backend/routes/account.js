@@ -8,9 +8,9 @@ const router = express.Router();
 router.post('/', (req, res) => {
   const { username } = req.session;
   if (username && username !== '') {
-    res.send(`${username} is logged in`);
+    res.status(200).send(`${username}`);
   } else {
-    res.send('no user logged in');
+    res.status(401).send('');
   }
 });
 
@@ -33,10 +33,8 @@ router.post('/login', (req, res, next) => {
       req.session.username = username;
       req.session.password = password;
       res.send('logged in');
-    } else if (error) {
-      next(error);
     } else {
-      res.send('failed to log in');
+      next(error);
     }
   });
 });
